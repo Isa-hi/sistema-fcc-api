@@ -28,14 +28,20 @@ urlpatterns = [
         path('admin/', users.AdminView.as_view()),
     #Admin data
         path('lista-admins/', users.AdminAll.as_view()),
+    #Edit admin
+        path('admins-edit/', users.AdminsViewEdit.as_view()),
     #Create Alumnos
         path('alumnos/', alumnos.AlumnosView.as_view()),
     #Alumnos Data
         path('lista-alumnos/', alumnos.AlumnosAll.as_view()),
+    #Edit Alumnos
+        path('alumnos-edit/', alumnos.AlumnosViewEdit.as_view()),
     #Create Maestros
         path('maestros/', maestros.MaestrosView.as_view()),
     #Maestros Data
         path('lista-maestros/', maestros.MaestrosAll.as_view()),
+    #Edit Maestros
+        path('maestros-edit/', maestros.MaestrosViewEdit.as_view()),
     #User Data
         #path('me/', users.Userme.as_view()),
     #Login

@@ -94,3 +94,24 @@ class AlumnosView(generics.CreateAPIView):
             return Response({"alumno_created_id": alumno.id }, 201)
 
         return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AlumnosViewEdit(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def put(self, request, *args, **kwargs):
+        alumno = get_object_or_404(Alumnos, id = request.data["id"])
+        alumno.matricula = request.data["matricula"]
+        alumno.curp = request.data["curp"]
+        alumno.rfc = request.data["rfc"]
+        alumno.fecha_nacimiento = request.data["fecha_nacimiento"]
+        alumno.edad = request.data["edad"]
+        alumno.telefono = request.data["telefono"]
+        alumno.ocupacion = request.data["ocupacion"]
+        alumno.save()
+        
+        temp = alumno.user
+        temp.first_name = request.data["first_name"]
+        temp.last_name = request.data["last_name"]
+        temp.save()
+        user = AlumnoSerializer(alumno, many=False).data
+        
+        return Response(user, 200)

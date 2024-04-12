@@ -93,3 +93,49 @@ class AdminView(generics.CreateAPIView):
             return Response({"admin_created_id": admin.id }, 201)
 
         return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AdminsViewEdit(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    #Contar el total de cada tipo de usuarios
+    def get(self, request, *args, **kwargs):
+        admin = Administradores.objects.filter(user__is_active = 1).order_by('id')
+        lista_admins = AdminSerializer(admin, many=True).data
+        #Obtener la cantidad de elementos en la lista
+        total_admins = len(lista_admins)
+        
+        #Obtener el total de maestros
+        maestros = Maestros.objects.filter(user__is_active = 1).order_by('id')
+        lista_maestros = MaestroSerializer(maestros, many=True).data
+        #Convertimos valores de nuevo a un arreglo
+        if not lista_maestros:
+            return Response({}, 400)
+        for maestro in lista_maestros:
+            maestro['materias_json'] = json.loads(maestro['materias_json'])
+        
+        total_maestros = len(lista_maestros)
+        
+        #Obtener el total de alumnos
+        alumnos = Alumnos.objects.filter(user__is_active = 1).order_by('id')
+        lista_alumnos = AlumnoSerializer(alumnos, many=True).data        
+        total_alumnos = len(lista_alumnos)
+        
+        return Response({"admins": total_admins, "maestros": total_maestros, "alumnos": total_alumnos}, 200)
+    
+    #Editar administrado
+    def put(self, request, *args, **kwargs):
+        #idUser = request.data['id']
+        admin = get_object_or_404(Administradores, id = request.data['id'])
+        admin.clave_admin = request.data['clave_admin']
+        admin.telefono = request.data['telefono']
+        admin.rfc = request.data['rfc']
+        admin.edad = request.data['edad']
+        admin.ocupacion = request.data['ocupacion']
+        admin.save()
+        
+        temp = admin.user
+        temp.first_name = request.data['first_name']
+        temp.last_name = request.data['last_name']
+        temp.save()
+        user = AdminSerializer(admin, many=False).data
+        
+        return Response(user, 200)
