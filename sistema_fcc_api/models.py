@@ -54,3 +54,21 @@ class Maestros(models.Model):
 
     def __str__(self):
         return "Perfil del maestro "+self.first_name+" "+self.last_name
+    
+    
+# Creación de la tabla de materias
+class Materia(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    nrc = models.CharField(max_length=255,null=True, blank=False)
+    nombre_materia = models.CharField(max_length=255,null=True, blank=True)
+    seccion = models.CharField(max_length=255,null=True, blank=True)
+    dias = models.TextField(null=True, blank=True)
+    hora_inicio = models.CharField(max_length=255, null=True, blank=True)
+    hora_fin = models.CharField(max_length=255, null=True, blank=True)
+    salon = models.CharField(max_length=255,null=True, blank=True)
+    programa_educativo = models.CharField(max_length=255,null=True, blank=True)
+    creation = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    update = models.DateTimeField(null=True, blank=True)
+    
+    def __str__(self):
+        return "Materia " + (self.nombre_materia if self.nombre_materia else "Unknown")

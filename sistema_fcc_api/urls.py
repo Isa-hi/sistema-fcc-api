@@ -20,6 +20,7 @@ from sistema_fcc_api.views import users
 from sistema_fcc_api.views import alumnos
 from sistema_fcc_api.views import maestros
 from sistema_fcc_api.views import auth
+from sistema_fcc_api.views import materias
 
 urlpatterns = [
     #Version
@@ -42,6 +43,9 @@ urlpatterns = [
         path('lista-maestros/', maestros.MaestrosAll.as_view()),
     #Edit Maestros
         path('maestros-edit/', maestros.MaestrosViewEdit.as_view()),
+    #Create Materia
+        path('materias/', materias.MateriasView.as_view()),
+        
     #User Data
         #path('me/', users.Userme.as_view()),
     #Login
