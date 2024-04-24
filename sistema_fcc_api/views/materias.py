@@ -62,4 +62,19 @@ class MateriasView(generics.CreateAPIView):
         materia.save()
         return Response({"message": "Materia registrada correctamente"}, 200)
     
+class MateriasAll(generics.CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request, *args, **kwargs):
+        materias = Materia.objects.all().order_by("id")
+        materias = MateriaSerializer(materias, many=True).data
+        #Aquí convertimos los valores de nuevo a un array
+        if not materias:
+            return Response({},400)
+        for materia in materias:
+            try:
+                materia["dias"] = json.loads(json.dumps(materia["dias"]))
+            except json.JSONDecodeError:
+                print(f"Error decoding JSON for materia {materia['id']}: {materia['dias']}")
+            
+        return Response(materias, 200)
             
