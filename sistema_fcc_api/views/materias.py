@@ -42,6 +42,7 @@ class MateriasView(generics.CreateAPIView):
         except json.JSONDecodeError:
             print(f"Error decoding JSON for materia {materia['id']}: {materia['dias']}")
         #materia["dias"] = json.loads(materia["dias"]) This line is not working
+        # Is returning a string instead of an array
         # ToDo: convert the values back to an array
         return Response(materia, 200)
     
@@ -90,4 +91,19 @@ class MateriasAll(generics.CreateAPIView):
                 print(f"Error decoding JSON for materia {materia['id']}: {materia['dias']}")
             
         return Response(materias, 200)
+    
+    
+class MateriasViewEdit(generics.CreateAPIView):
+    def put(self, request, *args, **kwargs):
+        materia = get_object_or_404(Materia, id=request.data['id'])
+        materia.nrc = request.data['nrc']
+        materia.nombre_materia = request.data['nombre_materia']
+        materia.seccion = request.data['seccion']
+        materia.dias = request.data['dias']
+        materia.hora_inicio = request.data['hora_inicio']
+        materia.hora_fin = request.data['hora_fin']
+        materia.salon = request.data['salon']
+        materia.programa_educativo = request.data['programa_educativo']
+        materia.save()
+        return Response({"message": "Materia actualizada correctamente"}, 200)
             
