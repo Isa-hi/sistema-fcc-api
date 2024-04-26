@@ -36,20 +36,16 @@ class MateriasView(generics.CreateAPIView):
     def get(self, request, *args, **kwargs):
         materia = get_object_or_404(Materia, id=request.GET.get("id"))
         materia = MateriaSerializer(materia, many=False).data
-        # materias["dias"] = json.loads(materias["dias"]) is a string i need to turn it into an array
         try:
             materia["dias"] = json.loads(materia["dias"])
         except json.JSONDecodeError:
             print(f"Error decoding JSON for materia {materia['id']}: {materia['dias']}")
-        #materia["dias"] = json.loads(materia["dias"]) This line is not working
-        # Is returning a string instead of an array
-        # ToDo: convert the values back to an array
+
         return Response(materia, 200)
     
     #Registrar nueva materia
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        #materia = MateriaSerializer(data=request.data)
         #Grab materia data
         nrc = request.data['nrc']
         nombre_materia = request.data['nombre_materia']
