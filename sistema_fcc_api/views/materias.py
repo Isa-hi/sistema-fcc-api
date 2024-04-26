@@ -106,4 +106,12 @@ class MateriasViewEdit(generics.CreateAPIView):
         materia.programa_educativo = request.data['programa_educativo']
         materia.save()
         return Response({"message": "Materia actualizada correctamente"}, 200)
+    
+    def delete(self, request, *args, **kwargs):
+        materia = get_object_or_404(Materia, id=request.GET.get('id'))
+        try:
+            materia.delete()
+            return Response({"message": "Materia eliminada correctamente"}, 200)
+        except Exception as e:
+            return Response({"message": "Error al eliminar la materia"}, 400)        
             
